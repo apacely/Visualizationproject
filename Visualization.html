@@ -28,101 +28,49 @@
 </head>
 <body>
     <h1>Interactive Dataset Visualization</h1>
-    <div class="controls">
-        <label for="filter">Filter by Dataset Version:</label>
-        <select id="filter">
-            <option value="all">All</option>
-        </select>
+    <p>Below is an embedded Tableau visualization showcasing insights from the dataset:</p>
+
+    <!-- Tableau Embed Code -->
+    <div class='tableauPlaceholder' id='viz1734155258104' style='position: relative'>
+        <noscript>
+            <a href='#'>
+                <img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Th&#47;Thesis_17341537260150&#47;Dashboard1&#47;1_rss.png' style='border: none' />
+            </a>
+        </noscript>
+        <object class='tableauViz' style='display:none;'>
+            <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+            <param name='embed_code_version' value='3' />
+            <param name='site_root' value='' />
+            <param name='name' value='Thesis_17341537260150&#47;Dashboard1' />
+            <param name='tabs' value='no' />
+            <param name='toolbar' value='yes' />
+            <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Th&#47;Thesis_17341537260150&#47;Dashboard1&#47;1.png' />
+            <param name='animate_transition' value='yes' />
+            <param name='display_static_image' value='yes' />
+            <param name='display_spinner' value='yes' />
+            <param name='display_overlay' value='yes' />
+            <param name='display_count' value='yes' />
+            <param name='language' value='en-US' />
+        </object>
     </div>
-    <svg width="800" height="400"></svg>
-    <div class="tooltip" style="display: none;"></div>
-
-    <script>
-        const dataset = [
-            { Drug_Name: "XMD11-85h", Dataset_Version: "GDSC1", Epoch: 1, Predictive_Accuracy: 85 },
-            { Drug_Name: "SN-38", Dataset_Version: "GDSC2", Epoch: 2, Predictive_Accuracy: 70 },
-            { Drug_Name: "AZD5991", Dataset_Version: "GDSC2", Epoch: 3, Predictive_Accuracy: 60 },
-            { Drug_Name: "AZD7969", Dataset_Version: "GDSC1", Epoch: 4, Predictive_Accuracy: 90 },
-            { Drug_Name: "150412", Dataset_Version: "GDSC2", Epoch: 5, Predictive_Accuracy: 50 }
-        ];
-
-        const margin = { top: 20, right: 30, bottom: 40, left: 50 };
-        const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
-
-        const svg = d3.select("svg")
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        const xScale = d3.scaleBand()
-            .domain(dataset.map(d => d.Drug_Name))
-            .range([0, width])
-            .padding(0.2);
-
-        const yScale = d3.scaleLinear()
-            .domain([0, 100])
-            .nice()
-            .range([height, 0]);
-
-        svg.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(xScale));
-
-        svg.append("g")
-            .call(d3.axisLeft(yScale));
-
-        const tooltip = d3.select(".tooltip");
-
-        const bars = svg.selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("x", d => xScale(d.Drug_Name))
-            .attr("y", d => yScale(d.Predictive_Accuracy))
-            .attr("width", xScale.bandwidth())
-            .attr("height", d => height - yScale(d.Predictive_Accuracy))
-            .attr("fill", "steelblue")
-            .on("mouseover", (event, d) => {
-                tooltip.style("display", "block")
-                    .style("left", `${event.pageX + 5}px`)
-                    .style("top", `${event.pageY - 28}px`)
-                    .html(`<strong>Drug:</strong> ${d.Drug_Name}<br><strong>Accuracy:</strong> ${d.Predictive_Accuracy}%`);
-            })
-            .on("mouseout", () => tooltip.style("display", "none"));
-
-        const filterMenu = d3.select("#filter");
-
-        const versions = Array.from(new Set(dataset.map(d => d.Dataset_Version)));
-        versions.forEach(version => {
-            filterMenu.append("option")
-                .attr("value", version)
-                .text(version);
-        });
-
-        filterMenu.on("change", function() {
-            const selected = this.value;
-            const filteredData = selected === "all" ? dataset : dataset.filter(d => d.Dataset_Version === selected);
-
-            const updatedBars = svg.selectAll("rect")
-                .data(filteredData, d => d.Drug_Name);
-
-            updatedBars.enter()
-                .append("rect")
-                .attr("x", d => xScale(d.Drug_Name))
-                .attr("y", d => yScale(d.Predictive_Accuracy))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => height - yScale(d.Predictive_Accuracy))
-                .attr("fill", "steelblue")
-                .merge(updatedBars)
-                .transition()
-                .duration(500)
-                .attr("x", d => xScale(d.Drug_Name))
-                .attr("y", d => yScale(d.Predictive_Accuracy))
-                .attr("height", d => height - yScale(d.Predictive_Accuracy));
-
-            updatedBars.exit().remove();
-        });
+    <script type='text/javascript'>
+        var divElement = document.getElementById('viz1734155258104');
+        var vizElement = divElement.getElementsByTagName('object')[0];
+        if (divElement.offsetWidth > 800) {
+            vizElement.style.width = '1000px';
+            vizElement.style.height = '827px';
+        } else if (divElement.offsetWidth > 500) {
+            vizElement.style.width = '1000px';
+            vizElement.style.height = '827px';
+        } else {
+            vizElement.style.width = '100%';
+            vizElement.style.height = '1227px';
+        }
+        var scriptElement = document.createElement('script');
+        scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+        vizElement.parentNode.insertBefore(scriptElement, vizElement);
     </script>
-    <p><a href="Documentation.html">Documentation Page</a> | <a href="Demonstration.html">Demonstration Page</a></p>
+
+    <p><a href="documentation.html">Documentation Page</a> | <a href="video.html">Video Demonstration</a></p>
 </body>
 </html>
