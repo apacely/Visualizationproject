@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dataset Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        svg {
+            border: 1px solid #ccc;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            pointer-events: none;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .controls label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Dataset Visualization</h1>
+    <div class="controls">
+        <label for="filter">Filter by Dataset Version:</label>
+        <select id="filter">
+            <option value="all">All</option>
+        </select>
+    </div>
+    <svg width="800" height="400"></svg>
+    <div class="tooltip" style="display: none;"></div>
+
+    <script>
+        const dataset = [
+            { Drug_Name: "XMD11-85h", Dataset_Version: "GDSC1", Epoch: 1, Predictive_Accuracy: 85 },
+            { Drug_Name: "SN-38", Dataset_Version: "GDSC2", Epoch: 2, Predictive_Accuracy: 70 },
+            { Drug_Name: "AZD5991", Dataset_Version: "GDSC2", Epoch: 3, Predictive_Accuracy: 60 },
+            { Drug_Name: "AZD7969", Dataset_Version: "GDSC1", Epoch: 4, Predictive_Accuracy: 90 },
+            { Drug_Name: "150412", Dataset_Version: "GDSC2", Epoch: 5, Predictive_Accuracy: 50 }
+        ];
+
+        const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+        const width = 800 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        const svg = d3.select("svg")
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const xScale = d3.scaleBand()
+            .domain(dataset.map(d => d.Drug_Name))
+            .range([0, width])
+            .padding(0.2);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, 100])
+            .nice()
+            .range([height, 0]);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale));
+
+        svg.append("g")
+            .call(d3.axisLeft(yScale));
+
+        const tooltip = d3.select(".tooltip");
+
+        const bars = svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", d => xScale(d.Drug_Name))
+            .attr("y", d => yScale(d.Predictive_Accuracy))
+            .attr("width", xScale.bandwidth())
+            .attr("height", d => height - yScale(d.Predictive_Accuracy))
+            .attr("fill", "steelblue")
+            .on("mouseover", (event, d) => {
+                tooltip.style("display", "block")
+                    .style("left", `${event.pageX + 5}px`)
+                    .style("top", `${event.pageY - 28}px`)
+                    .html(`<strong>Drug:</strong> ${d.Drug_Name}<br><strong>Accuracy:</strong> ${d.Predictive_Accuracy}%`);
+            })
+            .on("mouseout", () => tooltip.style("display", "none"));
+
+        const filterMenu = d3.select("#filter");
+
+        const versions = Array.from(new Set(dataset.map(d => d.Dataset_Version)));
+        versions.forEach(version => {
+            filterMenu.append("option")
+                .attr("value", version)
+                .text(version);
+        });
+
+        filterMenu.on("change", function() {
+            const selected = this.value;
+            const filteredData = selected === "all" ? dataset : dataset.filter(d => d.Dataset_Version === selected);
+
+            const updatedBars = svg.selectAll("rect")
+                .data(filteredData, d => d.Drug_Name);
+
+            updatedBars.enter()
+                .append("rect")
+                .attr("x", d => xScale(d.Drug_Name))
+                .attr("y", d => yScale(d.Predictive_Accuracy))
+                .attr("width", xScale.bandwidth())
+                .attr("height", d => height - yScale(d.Predictive_Accuracy))
+                .attr("fill", "steelblue")
+                .merge(updatedBars)
+                .transition()
+                .duration(500)
+                .attr("x", d => xScale(d.Drug_Name))
+                .attr("y", d => yScale(d.Predictive_Accuracy))
+                .attr("height", d => height - yScale(d.Predictive_Accuracy));
+
+            updatedBars.exit().remove();
+        });
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentation: Interactive Visualization Project</h1>
+
+    <div class="section">
+        <h2>1. Introduction</h2>
+        <p>This documentation outlines the design and implementation process of the interactive visualization created for the dataset associated with my thesis. The visualization was built using D3.js and focuses on exploring predictive accuracy of different drugs over various datasets and epochs.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Design Process</h2>
+        <p>The design process began with identifying key questions to explore:</p>
+        <ul>
+            <li>Which drugs have the highest predictive accuracy?</li>
+            <li>How does accuracy vary across dataset versions?</li>
+            <li>Are there patterns in accuracy over epochs?</li>
+        </ul>
+        <p>Initial sketches were created to visualize these ideas (see below):</p>
+        <img src="sketch.png" alt="Initial Sketch">
+    </div>
+
+    <div class="section">
+        <h2>3. Rationale for Design Choices</h2>
+        <p>The design decisions were influenced by the need for clarity and interactivity:</p>
+        <ul>
+            <li><strong>Bar chart:</strong> Chosen to compare predictive accuracy across drugs.</li>
+            <li><strong>Color coding:</strong> Used for distinguishing dataset versions.</li>
+            <li><strong>Filtering:</strong> Allows users to focus on specific dataset versions.</li>
+            <li><strong>Tooltips:</strong> Provide detailed information for each data point on hover.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>4. Findings</h2>
+        <p>The visualization revealed several insights:</p>
+        <ul>
+            <li>Drug XMD11-85h consistently performed well across datasets.</li>
+            <li>Dataset version GDSC2 had more variation in predictive accuracy compared to GDSC1.</li>
+            <li>Accuracy trends over epochs were inconsistent, indicating further analysis is needed.</li>
+        </ul>
+        <p>Example screenshot:</p>
+        <img src="screenshot.png" alt="Visualization Screenshot">
+    </div>
+
+    <div class="section">
+        <h2>5. Video Demonstration</h2>
+        <p>A video demonstration showcasing the interactive features of the visualization can be found on the <a href="video.html">Video Page</a>.</p>
+    </div>
+
+    <div class="section">
+        <h2>6. Conclusion</h2>
+        <p>This project demonstrates the power of interactive visualizations in exploring complex datasets. The iterative design process and D3.js capabilities allowed for meaningful insights to be derived.</p>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Demonstration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        iframe {
+            border: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Visualization Video Demonstration</h1>
+    <p>Below is a video demonstration showcasing how to use the interactive visualization:</p>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/your_video_id" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    <p><a href="index.html">Back to Visualization</a> | <a href="documentation.html">Documentation Page</a></p>
+</body>
+</html>

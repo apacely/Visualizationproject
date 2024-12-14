@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentation: Interactive Visualization Project</h1>
+
+    <div class="section">
+        <h2>1. Introduction</h2>
+        <p>This documentation outlines the design and implementation process of the interactive visualization created for the dataset associated with my thesis. The visualization was built using D3.js and focuses on exploring predictive accuracy of different drugs over various datasets and epochs.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Design Process</h2>
+        <p>The design process began with identifying key questions to explore:</p>
+        <ul>
+            <li>Which drugs have the highest predictive accuracy?</li>
+            <li>How does accuracy vary across dataset versions?</li>
+            <li>Are there patterns in accuracy over epochs?</li>
+        </ul>
+        <p>Initial sketches were created to visualize these ideas (see below):</p>
+        <img src="sketch.png" alt="Initial Sketch">
+    </div>
+
+    <div class="section">
+        <h2>3. Rationale for Design Choices</h2>
+        <p>The design decisions were influenced by the need for clarity and interactivity:</p>
+        <ul>
+            <li><strong>Bar chart:</strong> Chosen to compare predictive accuracy across drugs.</li>
+            <li><strong>Color coding:</strong> Used for distinguishing dataset versions.</li>
+            <li><strong>Filtering:</strong> Allows users to focus on specific dataset versions.</li>
+            <li><strong>Tooltips:</strong> Provide detailed information for each data point on hover.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>4. Findings</h2>
+        <p>The visualization revealed several insights:</p>
+        <ul>
+            <li>Drug XMD11-85h consistently performed well across datasets.</li>
+            <li>Dataset version GDSC2 had more variation in predictive accuracy compared to GDSC1.</li>
+            <li>Accuracy trends over epochs were inconsistent, indicating further analysis is needed.</li>
+        </ul>
+        <p>Example screenshot:</p>
+        <img src="screenshot.png" alt="Visualization Screenshot">
+    </div>
+
+    <div class="section">
+        <h2>5. Video Demonstration</h2>
+        <p>A video demonstration showcasing the interactive features of the visualization can be found on the <a href="video.html">Video Page</a>.</p>
+    </div>
+
+    <div class="section">
+        <h2>6. Conclusion</h2>
+        <p>This project demonstrates the power of interactive visualizations in exploring complex datasets. The iterative design process and D3.js capabilities allowed for meaningful insights to be derived.</p>
+    </div>
+    <p><a href="Visualization.html">Visualization Page</a> | <a href="Demonstration.html">Demonstration Page</a></p>
+</body>
+</html>
